@@ -1,4 +1,4 @@
-clc; clear; close all;
+clc; close all;
 %% load data
 load('planning_data.mat');
 %% simulation timestamp
