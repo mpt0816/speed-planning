@@ -1,20 +1,22 @@
-clc; close all;
-%% load data
-load('planning_data.mat');
+function PlotResult(planning_data)
+global obstacle_accelaration_init
+global sample_time
+global ttc
+
 %% simulation timestamp
-timestamp = planning_data.Time;
+timestamp = planning_data(:,1);
 %% station of ego car
-station_ego = planning_data.data(:,1);
+station_ego = planning_data(:,2);
 %% velocity of ego car
-velocity_ego = planning_data.data(:,2);
+velocity_ego = planning_data(:,3);
 %% acceleration of ego car
-acceleration_ego = planning_data.data(:,3);
+acceleration_ego = planning_data(:,4);
 %% station of ahead obstacle car
-station_obstacle = planning_data.data(:,1) + planning_data.data(:,5);
+station_obstacle = planning_data(:,2) + planning_data(:,5);
 %% velocity of ahead obstacle car
-velocity_obstacle = planning_data.data(:,4);
+velocity_obstacle = planning_data(:,6);
 %% acceleration of ahead obstacle car
-acceleration_obstacle = planning_data.data(:,6);
+acceleration_obstacle = obstacle_accelaration_init * ones(length(velocity_obstacle), 1);
 
 data_size = length(acceleration_obstacle);
 for i = 1 : 1 : data_size
@@ -28,7 +30,7 @@ for i = 1 : 1 : data_size
     if i == 1
         jerk_ego = [jerk_ego, 0.0];
     else
-        jerk = (acceleration_ego(i) - acceleration_ego(i - 1)) / 0.002;
+        jerk = (acceleration_ego(i) - acceleration_ego(i - 1)) / sample_time;
         jerk_ego = [jerk_ego, jerk];
     end
 end
@@ -73,5 +75,34 @@ title('jerk');
 xlabel('time(s)');
 ylabel('jerk(m/s3)');
 legend('ego car');
+
+%% performance
+figure;
+follow_distance = planning_data(:,5);
+ttc_act = zeros(data_size, 1);
+
+for i = 1 : 1 : data_size
+    if velocity_ego(i, 1) - velocity_obstacle(i, 1) <= 1e-5
+        ttc_act(i, 1) = ttc;
+    else
+        ttc_act(i, 1) = follow_distance(i, 1) / (velocity_ego(i, 1) - velocity_obstacle(i, 1));
+    end
+end
+
+subplot(2, 1, 1);
+plot(timestamp, follow_distance, '-b', 'LineWidth', 0.5);
+
+title('Follow Distance');
+xlabel('time(s)');
+ylabel('station(m)');
+
+
+subplot(2, 1, 2);
+plot(timestamp, ttc_act, '-b', 'LineWidth', 0.5);
+
+title('TTC');
+xlabel('time(s)');
+ylabel('time(s)');
+
 
 
