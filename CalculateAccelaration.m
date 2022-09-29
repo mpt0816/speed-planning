@@ -1,7 +1,7 @@
 function sys = CalculateAccelaration(vel_ego, distance, vel_obstacle_ahead)
 %% params
 global curise_velocity
-global ttc
+global thw
 global lower_jerk
 global ego_velocity_init
 
@@ -27,23 +27,21 @@ feasable_lower_acc = LinearInterpolation(ego_velocity_init, max_dec_sch_speed_0,
 acc_max = abs(max_comfort_acc);
 acc_min = -acc_max;
 
-track_reserved_time = 1.1 + 1.0 * (ttc - 0.0);
-track_reserved_distance = 23.0 + max(0.0, ttc * 1.0);
+track_reserved_time = 1.1 + 0.4 * (thw - 1);
+track_reserved_distance = 3.0 + max(0.0, thw * 0.5);
 
 %% calculate reference speed
 if is_obstacle_ahead
     ref_distance_ahead = track_reserved_time * vel_ego + track_reserved_distance;
     approach_velocity = max(vel_ego - vel_obstacle_ahead, 0.0);
-    comfort_approach_distance = approach_velocity * approach_velocity / (2.0 * max_comfort_acc);
+    comfort_approach_distance = 0;
     safe_distance = comfort_approach_distance + approach_velocity * 1.5 + track_reserved_distance;
     ref_distance_ahead = ref_distance_ahead + comfort_approach_distance;
     is_dangerous = distance < safe_distance;
-    
     if is_dangerous
         acc_min = feasable_lower_acc;
         lower_jerk = -1.5;
     end
-    
     err_distance_ahead = ref_distance_ahead - distance;
     ref_velocity_ahead = -gain_distance * err_distance_ahead;
     ref_velocity = vel_obstacle_ahead + ref_velocity_ahead;

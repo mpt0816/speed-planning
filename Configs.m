@@ -41,7 +41,7 @@ global sample_time
 order = 2;
 wn = 5.0;
 zeta = 0.85;
-tau = 0.4;
+tau = 0.05;
 
 upper_velocity = 150.0 / 3.6;
 lower_velocity = 0.0;
@@ -71,5 +71,5 @@ jerk_sch_thresh_1 = -2.4;
 gain_distance = 0.2;
 gain_speed = 0.8;
 
-time_span = 8.0;
+time_span = 18.0;
 sample_time = 0.03;

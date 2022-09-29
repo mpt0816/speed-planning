@@ -1,7 +1,7 @@
 function PlotResult(planning_data)
 global obstacle_accelaration_init
 global sample_time
-global ttc
+global thw
 
 %% simulation timestamp
 timestamp = planning_data(:,1);
@@ -79,13 +79,13 @@ legend('ego car');
 %% performance
 figure;
 follow_distance = planning_data(:,5);
-ttc_act = zeros(data_size, 1);
+thw_act = zeros(data_size, 1);
 
 for i = 1 : 1 : data_size
-    if velocity_ego(i, 1) - velocity_obstacle(i, 1) <= 1e-5
-        ttc_act(i, 1) = ttc;
+    if velocity_ego(i, 1) <= 1e-5
+        thw_act(i, 1) = ttc;
     else
-        ttc_act(i, 1) = follow_distance(i, 1) / (velocity_ego(i, 1) - velocity_obstacle(i, 1));
+        thw_act(i, 1) = follow_distance(i, 1) / velocity_ego(i, 1);
     end
 end
 
@@ -98,9 +98,9 @@ ylabel('station(m)');
 
 
 subplot(2, 1, 2);
-plot(timestamp, ttc_act, '-b', 'LineWidth', 0.5);
+plot(timestamp, thw_act, '-b', 'LineWidth', 0.5);
 
-title('TTC');
+title('THW');
 xlabel('time(s)');
 ylabel('time(s)');
 

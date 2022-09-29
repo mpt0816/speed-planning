@@ -1,5 +1,5 @@
 global curise_velocity
-global ttc
+global thw
 
 global ego_satation_init
 global ego_velocity_init
@@ -10,7 +10,7 @@ global obstacle_distance_init
 global obstacle_velocity_init
 global obstacle_accelaration_init
 
-ttc = 3.0;
+thw = 3.0;
 curise_velocity = 30.0 / 3.6;
 
 ego_satation_init = 0.0;
