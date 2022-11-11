@@ -25,4 +25,4 @@ for i = 1 : num_of_pts
 end
 
 PlotResult(planning_data);
-PlotVehicleDynamicRespond;
+% PlotVehicleDynamicRespond;

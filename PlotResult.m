@@ -76,33 +76,33 @@ xlabel('time(s)');
 ylabel('jerk(m/s3)');
 legend('ego car');
 
-%% performance
-figure;
-follow_distance = planning_data(:,5);
-thw_act = zeros(data_size, 1);
-
-for i = 1 : 1 : data_size
-    if velocity_ego(i, 1) <= 1e-5
-        thw_act(i, 1) = ttc;
-    else
-        thw_act(i, 1) = follow_distance(i, 1) / velocity_ego(i, 1);
-    end
-end
-
-subplot(2, 1, 1);
-plot(timestamp, follow_distance, '-b', 'LineWidth', 0.5);
-
-title('Follow Distance');
-xlabel('time(s)');
-ylabel('station(m)');
-
-
-subplot(2, 1, 2);
-plot(timestamp, thw_act, '-b', 'LineWidth', 0.5);
-
-title('THW');
-xlabel('time(s)');
-ylabel('time(s)');
+% %% performance
+% figure;
+% follow_distance = planning_data(:,5);
+% thw_act = zeros(data_size, 1);
+% 
+% for i = 1 : 1 : data_size
+%     if velocity_ego(i, 1) <= 1e-5
+%         thw_act(i, 1) = thw;
+%     else
+%         thw_act(i, 1) = follow_distance(i, 1) / velocity_ego(i, 1);
+%     end
+% end
+% 
+% subplot(2, 1, 1);
+% plot(timestamp, follow_distance, '-b', 'LineWidth', 0.5);
+% 
+% title('Follow Distance');
+% xlabel('time(s)');
+% ylabel('station(m)');
+% 
+% 
+% subplot(2, 1, 2);
+% plot(timestamp, thw_act, '-b', 'LineWidth', 0.5);
+% 
+% title('THW');
+% xlabel('time(s)');
+% ylabel('time(s)');
 
 
 

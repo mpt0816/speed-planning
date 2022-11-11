@@ -71,5 +71,5 @@ jerk_sch_thresh_1 = -2.4;
 gain_distance = 0.2;
 gain_speed = 0.8;
 
-time_span = 18.0;
+time_span = 8.0;
 sample_time = 0.03;

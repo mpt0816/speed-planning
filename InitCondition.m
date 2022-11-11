@@ -11,13 +11,22 @@ global obstacle_velocity_init
 global obstacle_accelaration_init
 
 thw = 3.0;
-curise_velocity = 30.0 / 3.6;
+curise_velocity = 60.0 / 3.6;
 
 ego_satation_init = 0.0;
-ego_velocity_init = 1.519320;
-ego_accelaration_init = 0.37999;
-ego_jerk_init = 0.720894;
+ego_velocity_init = 15.410530023015387;
+ego_accelaration_init = -0.86783514803846606;
+ego_jerk_init = -0.35475318146368184;
 
-obstacle_distance_init = 35.3042;
-obstacle_velocity_init = 1.71897;
+obstacle_distance_init = 73.49;
+obstacle_velocity_init = 0;
 obstacle_accelaration_init = 0.0;
+
+% ego_satation_init = 0.0;
+% ego_velocity_init = 1.8293221536287243;
+% ego_accelaration_init =-0.32476829426337411;
+% ego_jerk_init = 0.0349010842;
+% 
+% obstacle_distance_init = 35.3902;
+% obstacle_velocity_init = 0;
+% obstacle_accelaration_init = 0.0;
