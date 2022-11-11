@@ -1,6 +1,5 @@
 function PlotResult(planning_data)
-global obstacle_accelaration_init
-global sample_time
+
 global thw
 
 %% simulation timestamp
@@ -11,29 +10,14 @@ station_ego = planning_data(:,2);
 velocity_ego = planning_data(:,3);
 %% acceleration of ego car
 acceleration_ego = planning_data(:,4);
+%% jerk of ego car
+jerk_ego = planning_data(:,5);
 %% station of ahead obstacle car
-station_obstacle = planning_data(:,2) + planning_data(:,5);
+station_obstacle = planning_data(:,6);
 %% velocity of ahead obstacle car
-velocity_obstacle = planning_data(:,6);
+velocity_obstacle = planning_data(:,7);
 %% acceleration of ahead obstacle car
-acceleration_obstacle = obstacle_accelaration_init * ones(length(velocity_obstacle), 1);
-
-data_size = length(acceleration_obstacle);
-for i = 1 : 1 : data_size
-    if velocity_obstacle(i) < 1e-8
-       acceleration_obstacle(i) = 0.0;
-    end
-end
-
-jerk_ego = [];
-for i = 1 : 1 : data_size
-    if i == 1
-        jerk_ego = [jerk_ego, 0.0];
-    else
-        jerk = (acceleration_ego(i) - acceleration_ego(i - 1)) / sample_time;
-        jerk_ego = [jerk_ego, jerk];
-    end
-end
+acceleration_obstacle = planning_data(:,8);
 
 figure;
 %% plot simulation result
@@ -76,33 +60,24 @@ xlabel('time(s)');
 ylabel('jerk(m/s3)');
 legend('ego car');
 
-% %% performance
-% figure;
-% follow_distance = planning_data(:,5);
-% thw_act = zeros(data_size, 1);
-% 
-% for i = 1 : 1 : data_size
-%     if velocity_ego(i, 1) <= 1e-5
-%         thw_act(i, 1) = thw;
-%     else
-%         thw_act(i, 1) = follow_distance(i, 1) / velocity_ego(i, 1);
-%     end
-% end
-% 
-% subplot(2, 1, 1);
-% plot(timestamp, follow_distance, '-b', 'LineWidth', 0.5);
-% 
-% title('Follow Distance');
-% xlabel('time(s)');
-% ylabel('station(m)');
-% 
-% 
-% subplot(2, 1, 2);
-% plot(timestamp, thw_act, '-b', 'LineWidth', 0.5);
-% 
-% title('THW');
-% xlabel('time(s)');
-% ylabel('time(s)');
+%% performance
+figure;
+actual_follow_distance = planning_data(:,6) - planning_data(:,2); 
+
+track_reserved_time = 1.1 + 1 * (thw - 0);
+track_reserved_distance = 23.0 + max(0.0, thw * 1);
+command_follow_distance = track_reserved_time * planning_data(:,3) + track_reserved_distance;
+
+plot(timestamp, actual_follow_distance, '-b', 'LineWidth', 0.5);
+hold on;
+plot(timestamp, command_follow_distance, '-r', 'LineWidth', 0.5);
+
+title('Follow Distance');
+xlabel('time(s)');
+ylabel('station(m)');
+legend('actual follow distance', 'required follow distance');
+grid on;
+
 
 
 

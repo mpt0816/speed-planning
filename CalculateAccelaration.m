@@ -17,9 +17,10 @@ global com_dec_sch_thresh_1
 
 global gain_distance
 global gain_speed
+global is_obstacle_ahead
 
 ref_velocity = curise_velocity;
-is_obstacle_ahead = true;
+% is_obstacle_ahead = true;
 is_dangerous = false;
 
 max_comfort_acc = LinearInterpolation(ego_velocity_init, com_dec_sch_speed_0, com_dec_sch_thresh_0, com_dec_sch_speed_1, com_dec_sch_thresh_1);

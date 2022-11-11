@@ -20,7 +20,12 @@ if isempty(distance)
 end
 
 distance = distance + (obstalce_speed - ego_speed) * sample_time;
-obstalce_speed = max(0.0, obstalce_speed + obstacle_acc * sample_time);
+obstalce_speed = max(0.0, obstalce_speed + obstacle_acc * sample_time);    
 
 sys.s = distance;
 sys.v = obstalce_speed;
+sys.a = obstacle_accelaration_init;
+if obstalce_speed < 1e-10
+    sys.a = 0;
+end
+

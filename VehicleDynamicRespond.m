@@ -37,6 +37,7 @@ if ~init
     sys.s = s;
     sys.v = v;
     sys.a = a;
+    sys.jerk = jerk;
     init = true;
     return;
 end
@@ -62,3 +63,4 @@ s = s + states(1, 1) * sample_time;
 sys.s = s;
 sys.v = v;
 sys.a = a;
+sys.jerk = jerk;
