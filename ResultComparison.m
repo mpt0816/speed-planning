@@ -42,10 +42,9 @@ acceleration_obstacle_qp = planning_data_qp(:,8);
 figure;
 %% plot simulation result
 subplot(4, 1, 1);
-plot(timestamp_pid, station_ego_pid, '-b', 'LineWidth', 0.5);
-hold on;
 plot(timestamp_pid, station_obstacle_pid, '--r', 'LineWidth', 0.5);
-
+hold on;
+plot(timestamp_pid, station_ego_pid, '-b', 'LineWidth', 0.5);
 hold on
 plot(timestamp_qp, station_ego_qp, '-k', 'LineWidth', 0.5);
 % hold on;
@@ -54,13 +53,13 @@ plot(timestamp_qp, station_ego_qp, '-k', 'LineWidth', 0.5);
 title('station');
 xlabel('time(s)');
 ylabel('station(m)');
-legend('pid', 'ahead car', 'qp');
+legend('ahead car', 'pid', 'qp');
 
 
 subplot(4, 1, 2);
-plot(timestamp_pid, velocity_ego_pid, '-b', 'LineWidth', 0.5);
-hold on;
 plot(timestamp_pid, velocity_obstacle_pid, '--r', 'LineWidth', 0.5);
+hold on;
+plot(timestamp_pid, velocity_ego_pid, '-b', 'LineWidth', 0.5);
 hold on;
 plot(timestamp_qp, velocity_ego_qp, '-k', 'LineWidth', 0.5);
 % hold on;
@@ -69,12 +68,12 @@ plot(timestamp_qp, velocity_ego_qp, '-k', 'LineWidth', 0.5);
 title('velocity');
 xlabel('time(s)');
 ylabel('velocity(m/s)');
-legend('pid', 'ahead car', 'qp');
+legend('ahead car', 'pid', 'qp');
 
 subplot(4, 1, 3);
-plot(timestamp_pid, acceleration_ego_pid, '-b', 'LineWidth', 0.5);
-hold on;
 plot(timestamp_pid, acceleration_obstacle_pid, '--r', 'LineWidth', 0.5);
+hold on;
+plot(timestamp_pid, acceleration_ego_pid, '-b', 'LineWidth', 0.5);
 hold on;
 plot(timestamp_qp, acceleration_ego_qp, '-k', 'LineWidth', 0.5);
 % hold on;
@@ -83,7 +82,7 @@ plot(timestamp_qp, acceleration_ego_qp, '-k', 'LineWidth', 0.5);
 title('acceleration');
 xlabel('time(s)');
 ylabel('acceleration(m/s2)');
-legend('pid', 'ahead car', 'qp');
+legend('ahead car', 'pid', 'qp');
 
 subplot(4, 1, 4);
 plot(timestamp_pid, jerk_ego_pid, '-b', 'LineWidth', 0.5);

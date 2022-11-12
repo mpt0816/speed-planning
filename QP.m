@@ -52,10 +52,10 @@ constrant.lower_j = lower_jerk;
 constrant.upper_dj = upper_diff_jerk;
 constrant.lower_dj = lower_diff_jerk;
 
-weights.v = 1.0;
-weights.a = 10.0;
-weights.j = 10.0;
-weights.relaxation_factor = 1000;
+weights.v = 1000.0;
+weights.a = 1000.0;
+weights.j = 1000.0;
+weights.relaxation_factor = 100;
 
 problem = FormulateQPProblem(ego, obs, constrant, target, weights);
 qp_results = SolveQPProblem(problem);
@@ -68,7 +68,7 @@ end
 data = DataTransform(qp_results, target, obs);
 
     function problem = FormulateQPProblem(ego, obs, cons, target, weights)
-        kernel = CalcaulateKernel(target, weights);
+        kernel = CalcaulateKernel(target, weights, obs);
         problem.H = kernel.H;
         problem.G = kernel.G;
         constraint = CalculateConstraint(target, cons, ego, obs);
@@ -99,18 +99,22 @@ data = DataTransform(qp_results, target, obs);
             settings.warm_start = false;
     end
 
-    function kernel = CalcaulateKernel(target, weights)
+    function kernel = CalcaulateKernel(target, weights, obs)
             num_of_knots = floor(target.time_span / target.time_interval);
             kernel_dim = 5 * num_of_knots;
             kernel.H = zeros(kernel_dim, kernel_dim);
             kernel.G = zeros(kernel_dim, 1);
-
+            ref_v = target.v;
+            if obs.is_obstacle_ahead
+                ref_v = obs.v;
+            end
+            
             for i = 0 : 1 : num_of_knots - 1
                 kernel.H(5 * i + 2, 5 * i + 2) = weights.v;
                 kernel.H(5 * i + 3, 5 * i + 3) = weights.a;
                 kernel.H(5 * i + 4, 5 * i + 4) = weights.j;
                 kernel.H(5 * i + 5, 5 * i + 5) = weights.relaxation_factor;
-                kernel.G(5 * i + 2, 1) = - weights.v * target.v;
+                kernel.G(5 * i + 2, 1) = - weights.v * ref_v;
             end
     end
 
@@ -120,7 +124,7 @@ data = DataTransform(qp_results, target, obs);
         dt3 = dt * dt2;
         num_of_knots = floor(target.time_span / target.time_interval);
         kernel_dim = 5 * num_of_knots;
-        num_of_constriant = 10 * num_of_knots - 1;
+        num_of_constriant = 11 * num_of_knots - 1;
         A = zeros(num_of_constriant, kernel_dim);
         lower = zeros(num_of_constriant, 1);
         upper = zeros(num_of_constriant, 1);
@@ -183,6 +187,7 @@ data = DataTransform(qp_results, target, obs);
         end
         
         %% Twh约束, n个
+        %% 碰撞约束, n个
         track_reserved_time = 1.1 + 1 * (target.thw - 0);
         track_reserved_distance = 23.0 + max(0.0, target.thw * 1);
         for i = 0 : 1 : num_of_knots - 1
@@ -190,9 +195,14 @@ data = DataTransform(qp_results, target, obs);
             [obs_s, obs_v, obs_a] = CalculateObstalceSVA(obs, time);
             A(rows, 5 * i + 1 : 5 * i + 2) = [1, track_reserved_time];
             A(rows, 5 * i + 5) = -1;
-            lower(rows, 1) = -1e10;
+            lower(rows, 1) = 0;
             upper(rows, 1) = obs_s - track_reserved_distance;
             rows = rows + 1;
+            
+            A(rows, 5 * i + 1) = 1;
+            lower(rows, 1) = 0;
+            upper(rows, 1) = obs_s;
+            rows = rows + 1;    
         end
         
         %% 松弛因子约束, n个
@@ -214,6 +224,7 @@ data = DataTransform(qp_results, target, obs);
         planning_data = zeros(num_of_knots, 8);
         for i = 0 : num_of_knots - 1
             timestamp = i * target.time_interval;
+%             disp(qp_results.x(5 * i + 5))
             [obs_s, obs_v, obs_a] = CalculateObstalceSVA(obs, timestamp);
             planning_data(i + 1, : ) = [timestamp, qp_results.x(5 * i + 1), qp_results.x(5 * i + 2), qp_results.x(5 * i + 3), qp_results.x(5 * i + 4), obs_s, obs_v, obs_a];
         end
