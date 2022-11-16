@@ -94,7 +94,7 @@ data = DataTransform(qp_results, target, obs);
             settings = solver.default_settings();
             settings.max_iter = 5000;
             settings.polish = true;
-            settings.verbose = true;
+            settings.verbose = false;
             settings.scaled_termination = false;
             settings.warm_start = false;
     end

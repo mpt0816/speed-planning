@@ -6,7 +6,12 @@ addpath(genpath(current_folder));
 InitCondition
 Configs
 
+tic;
 planning_data_pid = PID();
+toc; tic;
 planning_data_qp = QP();
+toc; tic;
+planning_data_lattice = Lattice();
+toc;
 
-ResultComparison(planning_data_pid, planning_data_qp);
+ThreeDResultComparison(planning_data_pid, planning_data_qp, planning_data_lattice);
