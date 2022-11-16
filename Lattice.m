@@ -53,7 +53,7 @@ constrant.upper_dj = upper_diff_jerk;
 constrant.lower_dj = lower_diff_jerk;
 
 weights.thw = 100.0;
-weights.v = 1.0;
+weights.v = 100.0;
 weights.jerk = 10.0;
 
 cruise_sample = CuriseEndPointSample(target, obs);
@@ -113,7 +113,10 @@ PlotPloys(ploys, best_ploy, obs, target);
             else
                 cost_jerk = cost_jerk + abs(j / lower_diff_jerk);
             end
-            
+            if obs.is_obstacle_ahead
+                [s, ref_v, a] = CalculateObstalceSVA(obs, t);
+                end_pt.v = v;
+            end
             cost_v = cost_v + abs(ref_v - v) / upper_velocity;
             
             t = t + target.time_interval;
@@ -258,6 +261,10 @@ PlotPloys(ploys, best_ploy, obs, target);
         end_pt.a = 0.0;
         end_pt.label = "quartic";
         while t <= 2 * target.time_span
+            if obs.is_obstacle_ahead
+                [s, v, a] = CalculateObstalceSVA(obs, t);
+                end_pt.v = v;
+            end
             end_pt.t = t;
             t = t + target.time_interval;
             if ~FeasibleRegion(end_pt)
@@ -298,10 +305,10 @@ PlotPloys(ploys, best_ploy, obs, target);
         s_sample = [];
         track_reserved_time = 1.1 + 1 * (thw - 0);
         track_reserved_distance = 23.0 + max(0.0, thw * 1);
-        s = s - 10;
+        s = s - 5;
         while s > 0.0
             s_sample = [s_sample; s];
-            s = s - 10;
+            s = s - 5;
         end
     end
 
@@ -324,6 +331,12 @@ PlotPloys(ploys, best_ploy, obs, target);
             if ~obs.is_obstacle_ahead
                 s = 1e10;
             end
+            
+%             if time > 3
+%                 s = obs.s + obs.v * 3;
+%                 v = 0.0;
+%                 a = 0.0;
+%             end
     end
 
     function out = FeasibleRegion(end_pt)

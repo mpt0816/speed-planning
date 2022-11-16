@@ -20,7 +20,7 @@ for i = 1 : num_of_pts
     
     planning_data(i, : ) = [timestamp, states.s, states.v, states.a, states.jerk, obs.s + states.s, obs.v, obs.a];
     
-    obs = CalculateObstacleInfo(states.v);
+    obs = CalculateObstacleInfo(states.v, timestamp);
     command =  CalculateAccelaration(states.v, obs.s, obs.v);
 end
 data = planning_data;

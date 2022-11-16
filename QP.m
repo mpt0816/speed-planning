@@ -52,7 +52,7 @@ constrant.lower_j = lower_jerk;
 constrant.upper_dj = upper_diff_jerk;
 constrant.lower_dj = lower_diff_jerk;
 
-weights.v = 1000.0;
+weights.v = 200.0;
 weights.a = 1000.0;
 weights.j = 1000.0;
 weights.relaxation_factor = 100;
@@ -110,6 +110,12 @@ data = DataTransform(qp_results, target, obs);
             end
             
             for i = 0 : 1 : num_of_knots - 1
+                
+                if obs.is_obstacle_ahead
+                    time = i * target.time_interval;
+                    [s, ref_v, a] = CalculateObstalceSVA(obs, time);
+                end
+                
                 kernel.H(5 * i + 2, 5 * i + 2) = weights.v;
                 kernel.H(5 * i + 3, 5 * i + 3) = weights.a;
                 kernel.H(5 * i + 4, 5 * i + 4) = weights.j;
@@ -202,7 +208,7 @@ data = DataTransform(qp_results, target, obs);
             A(rows, 5 * i + 1) = 1;
             lower(rows, 1) = 0;
             upper(rows, 1) = obs_s;
-            rows = rows + 1;    
+            rows = rows + 1;   
         end
         
         %% 松弛因子约束, n个
@@ -249,6 +255,13 @@ data = DataTransform(qp_results, target, obs);
             if ~obs.is_obstacle_ahead
                 s = 1e10;
             end
+            
+%             if time > 3
+%                 s = obs.s + obs.v * 3;
+%                 v = 0.0;
+%                 a = 0.0;
+%             end
+                
     end
 
 end

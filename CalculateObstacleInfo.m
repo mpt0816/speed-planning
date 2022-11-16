@@ -1,4 +1,4 @@
-function sys = CalculateObstacleInfo(ego_speed)
+function sys = CalculateObstacleInfo(ego_speed, timestamp)
 %% params
 global obstacle_distance_init
 global obstacle_velocity_init
@@ -18,6 +18,10 @@ persistent distance;
 if isempty(distance)
     distance = distance_init;
 end
+
+% if timestamp > 3
+%     obstalce_speed = 0;
+% end
 
 distance = distance + (obstalce_speed - ego_speed) * sample_time;
 obstalce_speed = max(0.0, obstalce_speed + obstacle_acc * sample_time);    
