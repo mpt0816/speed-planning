@@ -74,7 +74,6 @@ for ii = [1 : 1 : length(end_samples)]
     end
     ploys = [ploys; ploy];
 end
-
 data = DataTransform(best_ploy, target, obs);
 
 PlotPloys(ploys, best_ploy, obs, target);
@@ -251,9 +250,6 @@ PlotPloys(ploys, best_ploy, obs, target);
     function end_points = CuriseEndPointSample(target, obs)
         end_points = [];
         ref_v = target.v;
-        if obs.is_obstacle_ahead
-            ref_v = obs.v;
-        end
 
         t = target.time_interval;
         end_pt.s = 1e10;
@@ -261,15 +257,16 @@ PlotPloys(ploys, best_ploy, obs, target);
         end_pt.a = 0.0;
         end_pt.label = "quartic";
         while t <= 2 * target.time_span
-            if obs.is_obstacle_ahead
-                [s, v, a] = CalculateObstalceSVA(obs, t);
+            for v = 0 : 5 / 3.6 : target.v + 5 / 3.6
+                end_pt.t = t;
                 end_pt.v = v;
+                if ~FeasibleRegion(end_pt)
+                    continue;
+                end
+                
             end
-            end_pt.t = t;
+
             t = t + target.time_interval;
-            if ~FeasibleRegion(end_pt)
-                continue;
-            end
             end_points = [end_points; end_pt];
         end
     end
@@ -313,13 +310,13 @@ PlotPloys(ploys, best_ploy, obs, target);
     end
 
     function [s, v, a] = CalculateObstalceSVA(obs, time)
-            braek_time = 1e10;
+            break_time = 1e10;
             if obs.a < 0.0
-                break_time = fabs(obs.v / obs.a);
+                break_time = abs(obs.v / obs.a);
             end
             
-            if time >= braek_time
-                s = obs.s + fabs(obs.v * obs.v / 2 / obs.a);
+            if time >= break_time
+                s = obs.s + abs(obs.v * obs.v / 2 / obs.a);
                 v = 0.0;
                 a = 0.0;
             else

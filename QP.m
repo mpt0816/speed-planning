@@ -237,13 +237,13 @@ data = DataTransform(qp_results, target, obs);
     end
 
     function [s, v, a] = CalculateObstalceSVA(obs, time)
-            braek_time = 1e10;
+            break_time = 1e10;
             if obs.a < 0.0
-                break_time = fabs(obs.v / obs.a);
+                break_time = abs(obs.v / obs.a);
             end
             
-            if time >= braek_time
-                s = obs.s + fabs(obs.v * obs.v / 2 / obs.a);
+            if time >= break_time
+                s = obs.s + abs(obs.v * obs.v / 2 / obs.a);
                 v = 0.0;
                 a = 0.0;
             else
