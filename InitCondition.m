@@ -24,11 +24,11 @@ obstacle_distance_init = 73.49;
 obstacle_velocity_init = 10;
 obstacle_accelaration_init = -3.0;
 
-ego_satation_init = 0.0;
-ego_velocity_init = 1.8293221536287243;
-ego_accelaration_init =-0.32476829426337411;
-ego_jerk_init = 0.0349010842;
-
-obstacle_distance_init = 35.3902;
-obstacle_velocity_init = 0;
-obstacle_accelaration_init = 2.0;
+% ego_satation_init = 0.0;
+% ego_velocity_init = 1.8293221536287243;
+% ego_accelaration_init =-0.32476829426337411;
+% ego_jerk_init = 0.0349010842;
+% 
+% obstacle_distance_init = 35.3902;
+% obstacle_velocity_init = 0;
+% obstacle_accelaration_init = 2.0;

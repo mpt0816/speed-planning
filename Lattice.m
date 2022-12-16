@@ -130,7 +130,7 @@ PlotPloys(ploys, best_ploy, obs, target);
     end
 
     function out = KinematicConstraints(ploy)
-        t = target.time_interval;
+        t = 0;
         while t <= target.time_span
             [obs_s, obs_v, obs_a]= CalculateObstalceSVA(obs, t);
             s = PloyEval(ploy, 0, t);
@@ -263,11 +263,9 @@ PlotPloys(ploys, best_ploy, obs, target);
                 if ~FeasibleRegion(end_pt)
                     continue;
                 end
-                
+                end_points = [end_points; end_pt]; 
             end
-
-            t = t + target.time_interval;
-            end_points = [end_points; end_pt];
+            t = t + target.time_interval;   
         end
     end
 
